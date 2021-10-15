@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:campo_minado/models/field.dart';
-import 'package:flutter/cupertino.dart';
 
 class Board {
   final int lines;
@@ -10,9 +9,9 @@ class Board {
   final List<Field> _fields = [];
 
   Board({
-    @required this.lines,
-    @required this.columns,
-    @required this.minesQuantity,
+    required this.lines,
+    required this.columns,
+    required this.minesQuantity,
   }) {
     _createFields();
     _setNeighbors();

@@ -1,5 +1,4 @@
 import 'package:campo_minado/exceptions/explosion_exception.dart';
-import 'package:flutter/cupertino.dart';
 
 class Field {
   final int line;
@@ -12,8 +11,8 @@ class Field {
   bool _exploded = false;
 
   Field({
-    @required this.line,
-    @required this.column,
+    required this.line,
+    required this.column,
   });
 
   void addNeighbor(Field neighbor) {
