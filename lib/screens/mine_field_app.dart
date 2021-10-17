@@ -1,4 +1,7 @@
+import 'package:campo_minado/components/field_widget.dart';
 import 'package:campo_minado/components/result_widget.dart';
+import 'package:campo_minado/exceptions/explosion_exception.dart';
+import 'package:campo_minado/models/field.dart';
 import 'package:flutter/material.dart';
 
 class MineFieldApp extends StatelessWidget {
@@ -8,8 +11,22 @@ class MineFieldApp extends StatelessWidget {
     print("Restart...");
   }
 
+  void _abrir(Field field) {
+    print('abrir');
+  }
+
+  void _switchMarkup(Field field) {
+    print("switchMarkup");
+  }
+
   @override
   Widget build(BuildContext context) {
+    Field f = Field(line: 0, column: 0);
+    try {
+      f.setMine();
+      f.open();
+    } on ExplosionException {}
+
     return MaterialApp(
       home: Scaffold(
         appBar: ResultWidget(
@@ -17,7 +34,11 @@ class MineFieldApp extends StatelessWidget {
           onRestart: _restart,
         ),
         body: Container(
-          child: Text('Board'),
+          child: FieldWidget(
+            field: f,
+            onOpen: _abrir,
+            onSwitchMarkup: _switchMarkup,
+          ),
         ),
       ),
     );
