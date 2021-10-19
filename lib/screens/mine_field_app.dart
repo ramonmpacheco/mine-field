@@ -1,5 +1,6 @@
 import 'package:campo_minado/components/board_widget.dart';
 import 'package:campo_minado/components/result_widget.dart';
+import 'package:campo_minado/exceptions/explosion_exception.dart';
 import 'package:campo_minado/models/board.dart';
 import 'package:campo_minado/models/field.dart';
 import 'package:flutter/material.dart';
@@ -16,15 +17,38 @@ class _MineFieldAppState extends State<MineFieldApp> {
   Board _board = Board(lines: 12, columns: 12, minesQuantity: 3);
 
   void _restart() {
-    print("Restart...");
+    setState(() {
+      _won = null;
+      _board.restart();
+    });
   }
 
   void _open(Field field) {
-    print('abrir');
+    if (_won != null) {
+      return;
+    }
+
+    setState(() {
+      try {
+        field.open();
+
+        if (_board.solved) {
+          _won = true;
+        }
+      } on ExplosionException {
+        _won = false;
+        _board.revealMines();
+      }
+    });
   }
 
   void _switchMarkup(Field field) {
-    print("switchMarkup");
+    setState(() {
+      field.switchMarkup();
+      if (_board.solved) {
+        _won = true;
+      }
+    });
   }
 
   @override

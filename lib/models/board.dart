@@ -25,7 +25,7 @@ class Board {
     _setMines();
   }
 
-  void _revealMines() {
+  void revealMines() {
     _fields.forEach((element) {
       element.revealExplosive();
     });
