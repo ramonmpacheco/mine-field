@@ -14,12 +14,12 @@ class MineFieldApp extends StatefulWidget {
 
 class _MineFieldAppState extends State<MineFieldApp> {
   bool? _won;
-  Board _board = Board(lines: 12, columns: 12, minesQuantity: 3);
+  Board? _board;
 
   void _restart() {
     setState(() {
       _won = null;
-      _board.restart();
+      _board!.restart();
     });
   }
 
@@ -32,12 +32,12 @@ class _MineFieldAppState extends State<MineFieldApp> {
       try {
         field.open();
 
-        if (_board.solved) {
+        if (_board!.solved) {
           _won = true;
         }
       } on ExplosionException {
         _won = false;
-        _board.revealMines();
+        _board!.revealMines();
       }
     });
   }
@@ -45,10 +45,20 @@ class _MineFieldAppState extends State<MineFieldApp> {
   void _switchMarkup(Field field) {
     setState(() {
       field.switchMarkup();
-      if (_board.solved) {
+      if (_board!.solved) {
         _won = true;
       }
     });
+  }
+
+  Board _getBoard(double width, double height) {
+    if (_board == null) {
+      int columns = 15;
+      double fieldSize = width / columns;
+      int lines = (height / fieldSize).floor();
+      _board = Board(lines: lines, columns: columns, minesQuantity: 3);
+    }
+    return _board!;
   }
 
   @override
@@ -60,10 +70,15 @@ class _MineFieldAppState extends State<MineFieldApp> {
           onRestart: _restart,
         ),
         body: Container(
-          child: BoardWidget(
-            board: _board,
-            onOpen: _open,
-            onSwitchMarkup: _switchMarkup,
+          color: Colors.grey,
+          child: LayoutBuilder(
+            builder: (ctx, constraints) {
+              return BoardWidget(
+                board: _getBoard(constraints.maxWidth, constraints.maxHeight),
+                onOpen: _open,
+                onSwitchMarkup: _switchMarkup,
+              );
+            },
           ),
         ),
       ),
